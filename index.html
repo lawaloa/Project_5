@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Omotola Ayodele Lawal">
+<meta name="dcterms.date" content="2024-09-16">
+
+<title>CUSTOMER ANALYTICS: PREPARING DATA FOR MODELLING</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="notebook_files/libs/clipboard/clipboard.min.js"></script>
+<script src="notebook_files/libs/quarto-html/quarto.js"></script>
+<script src="notebook_files/libs/quarto-html/popper.min.js"></script>
+<script src="notebook_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="notebook_files/libs/quarto-html/anchor.min.js"></script>
+<link href="notebook_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="notebook_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="notebook_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="notebook_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="notebook_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(image.jpg);
+background-size: cover;
+      }
+</style>
+
+
+</head>
+
+<body>
+
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">CUSTOMER ANALYTICS: PREPARING DATA FOR MODELLING</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Omotola Ayodele Lawal </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">September 16, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link active" data-scroll-target="#project-overview">Project Overview</a></li>
+  <li><a href="#task" id="toc-task" class="nav-link" data-scroll-target="#task">Task</a></li>
+  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
+  <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a></li>
+  <li><a href="#stepsexplanations" id="toc-stepsexplanations" class="nav-link" data-scroll-target="#stepsexplanations">Steps/Explanations</a></li>
+  <li><a href="#data-analysis" id="toc-data-analysis" class="nav-link" data-scroll-target="#data-analysis">Data Analysis</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations">Recommendations</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#project-overview-1" id="toc-project-overview-1" class="nav-link" data-scroll-target="#project-overview-1">Project Overview</a></li>
+  <li><a href="#task-1" id="toc-task-1" class="nav-link" data-scroll-target="#task-1">Task</a></li>
+  <li><a href="#tools-1" id="toc-tools-1" class="nav-link" data-scroll-target="#tools-1">Tools</a></li>
+  <li><a href="#stepsexplanations-1" id="toc-stepsexplanations-1" class="nav-link" data-scroll-target="#stepsexplanations-1">Steps/Explanations</a></li>
+  <li><a href="#data-analysis-1" id="toc-data-analysis-1" class="nav-link" data-scroll-target="#data-analysis-1">Data Analysis</a></li>
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1">Results</a></li>
+  <li><a href="#recommendations-1" id="toc-recommendations-1" class="nav-link" data-scroll-target="#recommendations-1">Recommendations</a></li>
+  <li><a href="#limitations-1" id="toc-limitations-1" class="nav-link" data-scroll-target="#limitations-1">Limitations</a></li>
+  <li><a href="#references-1" id="toc-references-1" class="nav-link" data-scroll-target="#references-1">References</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="notebook.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li><li><a href="notebook.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></nav>
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="project-overview" class="level3">
+<h3 class="anchored" data-anchor-id="project-overview">Project Overview</h3>
+</section>
+<section id="task" class="level3">
+<h3 class="anchored" data-anchor-id="task">Task</h3>
+</section>
+<section id="data-source" class="level3">
+<h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
+</section>
+<section id="tools" class="level3">
+<h3 class="anchored" data-anchor-id="tools">Tools</h3>
+</section>
+<section id="stepsexplanations" class="level3">
+<h3 class="anchored" data-anchor-id="stepsexplanations">Steps/Explanations</h3>
+</section>
+<section id="data-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="data-analysis">Data Analysis</h3>
+</section>
+<section id="results" class="level3">
+<h3 class="anchored" data-anchor-id="results">Results</h3>
+</section>
+<section id="recommendations" class="level3">
+<h3 class="anchored" data-anchor-id="recommendations">Recommendations</h3>
+</section>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+</section>
+<section id="project-overview-1" class="level2">
+<h2 class="anchored" data-anchor-id="project-overview-1">Project Overview</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="hr-image-small.png" class="img-fluid figure-img"></p>
+<figcaption>Two data scientists working on a dashboard.</figcaption>
+</figure>
+</div>
+<p>A common problem when creating models to generate business value from data is that the datasets can be so large that it can take days for the model to generate predictions. Ensuring that your dataset is stored as efficiently as possible is crucial for allowing these models to run on a more reasonable timescale without having to reduce the size of the dataset.</p>
+<p>You’ve been hired by a major online data science training provider called <em>Training Data Ltd.</em> to clean up one of their largest customer datasets. This dataset will eventually be used to predict whether their students are looking for a new job or not, information that they will then use to direct them to prospective recruiters.</p>
+<p>You’ve been given access to <code>customer_train.csv</code>, which is a subset of their entire customer dataset, so you can create a proof-of-concept of a much more efficient storage solution. The dataset contains anonymized student information, and whether they were looking for a new job or not during training:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>student_id</code></td>
+<td>A unique ID for each student.</td>
+</tr>
+<tr class="even">
+<td><code>city</code></td>
+<td>A code for the city the student lives in.</td>
+</tr>
+<tr class="odd">
+<td><code>city_development_index</code></td>
+<td>A scaled development index for the city.</td>
+</tr>
+<tr class="even">
+<td><code>gender</code></td>
+<td>The student’s gender.</td>
+</tr>
+<tr class="odd">
+<td><code>relevant_experience</code></td>
+<td>An indicator of the student’s work relevant experience.</td>
+</tr>
+<tr class="even">
+<td><code>enrolled_university</code></td>
+<td>The type of university course enrolled in (if any).</td>
+</tr>
+<tr class="odd">
+<td><code>education_level</code></td>
+<td>The student’s education level.</td>
+</tr>
+<tr class="even">
+<td><code>major_discipline</code></td>
+<td>The educational discipline of the student.</td>
+</tr>
+<tr class="odd">
+<td><code>experience</code></td>
+<td>The student’s total work experience (in years).</td>
+</tr>
+<tr class="even">
+<td><code>company_size</code></td>
+<td>The number of employees at the student’s current employer.</td>
+</tr>
+<tr class="odd">
+<td><code>company_type</code></td>
+<td>The type of company employing the student.</td>
+</tr>
+<tr class="even">
+<td><code>last_new_job</code></td>
+<td>The number of years between the student’s current and previous jobs.</td>
+</tr>
+<tr class="odd">
+<td><code>training_hours</code></td>
+<td>The number of hours of training completed.</td>
+</tr>
+<tr class="even">
+<td><code>job_change</code></td>
+<td>An indicator of whether the student is looking for a new job (<code>1</code>) or not (<code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="task-1" class="level2">
+<h2 class="anchored" data-anchor-id="task-1">Task</h2>
+<p>The Head Data Scientist at Training Data Ltd.&nbsp;has asked you to create a <code>DataFrame</code> called <code>ds_jobs_transformed</code> that stores the data in <code>customer_train.csv</code> much more efficiently. Specifically, they have set the following requirements:</p>
+<ul>
+<li><p>Columns containing categories with only two factors must be stored as Booleans (bool).</p></li>
+<li><p>Columns containing integers only must be stored as 32-bit integers (int32).</p></li>
+<li><p>Columns containing floats must be stored as 16-bit floats (float16).</p></li>
+<li><p>Columns containing nominal categorical data must be stored as the category data type.</p></li>
+<li><p>Columns containing ordinal categorical data must be stored as ordered categories, and not mapped to numerical values, with an order that reflects the natural order of the column.</p></li>
+<li><p>The DataFrame should be filtered to only contain students with 10 or more years of experience at companies with at least 1000 employees, as their recruiter base is suited to more experienced professionals at enterprise companies.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<p>If you call <code>.info()</code> or <code>.memory_usage()</code> methods on <code>ds_jobs</code> and <code>ds_jobs_transformed</code> after you’ve preprocessed it, you should notice a substantial decrease in memory usage.</p>
+</div>
+</div>
+</div>
+<p>Data Source</p>
+<hr>
+<p>Data: The primary data used for this analysis is the <code>customer_train.csv</code>, which is a subset of the entire customer dataset</p>
+</section>
+<section id="tools-1" class="level2">
+<h2 class="anchored" data-anchor-id="tools-1">Tools</h2>
+<p>Jupyter lab</p>
+</section>
+<section id="stepsexplanations-1" class="level2">
+<h2 class="anchored" data-anchor-id="stepsexplanations-1">Steps/Explanations</h2>
+<ul>
+<li><p>The necessary library was imported, which is <code>Pandas</code></p></li>
+<li><p>The Original dataset was loaded, named <code>ds_jobs</code> and a copy was made, called <code>ds_jobs_transformed</code></p></li>
+<li><p>Exploratory Data Analysis was performed which help identify ordinal, nominal, and two-factor categories. This was done by written codes, which iterate over all columns of the DataFrame <code>ds_jobs</code> that have a data type of object (typically representing strings or categorical data) and print the value counts of each column.</p></li>
+<li><p>A dictionary of columns containing ordered categorical data was created. The code defines the dictionary called ordered_cats, which contains lists of ordered categories for various features. These features represent specific categorical data in a dataset (e.g., levels of education, size of the company, work experience, etc.). This dictionary can later be used to create ordered categorical columns, for example, when transforming or encoding data in a pandas DataFrame.</p></li>
+<li><p>A mapping dictionary of columns containing two-factor categories to convert to Booleans was created. The code defines a Python dictionary called two_factor_cats. This dictionary is used to map certain categorical values into Boolean (True or False) values.</p></li>
+<li><p>This <code>for col in ds_jobs_transformed:</code> code iterates through each column in the <code>ds_jobs_transformed</code> DataFrame, performing different transformations based on the column name.</p></li>
+<li><p>For the columns <code>'relevant_experience'</code> and <code>'job_change'</code>, if col in <code>['relevant_experience', 'job_change']:</code> code uses the <code>two_factor_cats</code> dictionary to convert their categorical values into boolean values (True/False).</p></li>
+<li><p>The .map() function applies the mapping from two_factor_cats (defined previously) to the column. For example:</p>
+<ul>
+<li><code>'No relevant experience'</code> becomes <code>False</code>.</li>
+<li><code>'Has relevant experience'</code> becomes <code>True</code>.</li>
+<li><code>0.0</code> becomes <code>False</code>.</li>
+<li><code>1.0</code> becomes <code>True</code>.</li>
+</ul></li>
+<li><p>For the columns <code>'student_id'</code> and <code>'training_hours'</code>, <code>elif col in ['student_id', 'training_hours']:</code> code changes their data types to int32 using <code>.astype('int32')</code>. This helps reduce memory usage, especially if the original data type was int64. The smaller int32 uses less memory and is sufficient for storing integers that fit within the 32-bit range.</p></li>
+<li><p>The column <code>'city_development_index'</code> is converted to <code>float16 (16-bit floating-point format)</code> by the following code:</p></li>
+</ul>
+<pre><code>elif col in ['student_id', 'training_hours']:
+        ds_jobs_transformed[col] = ds_jobs_transformed[col].astype('int32')</code></pre>
+<ul>
+<li><p><code>float16</code> consumes less memory than the default <code>float64</code>.</p></li>
+<li><p>It’s useful for reducing the memory footprint of large datasets when the precision provided by <code>float16</code> is sufficient.</p></li>
+<li><p>For columns that are in the <code>ordered_cats</code> dictionary created earlier, the code below converts them to ordered categorical data types.</p></li>
+</ul>
+<pre><code>elif col in ordered_cats.keys():
+    category = pd.CategoricalDtype(ordered_cats[col], ordered=True)
+    ds_jobs_transformed[col] = ds_jobs_transformed[col].astype(category)</code></pre>
+<ul>
+<li><p><code>ordered_cats</code> is a dictionary that contains the order of categories for certain columns.</p></li>
+<li><p><code>pd.CategoricalDtype</code> creates a categorical data type with a specific order, which is useful when the categories have a meaningful order (e.g., educational levels or experience).</p></li>
+<li><p><code>ordered=True</code> ensures that the categories are treated as ordered (e.g., “Primary School” &lt; “High School” &lt; “Graduate”).</p></li>
+<li><p>The <code>.astype(category)</code> applies this conversion.</p></li>
+<li><p>For all remaining columns (those not handled in the previous conditions), the code below converts them to the standard categorical data type without an explicit order.</p></li>
+</ul>
+<pre><code>else:
+    ds_jobs_transformed[col] = ds_jobs_transformed[col].astype('category')</code></pre>
+<ul>
+<li><p>Converting to category reduces memory usage, especially when the column has a limited number of distinct values (e.g., city names, job roles, etc.).</p></li>
+<li><p>The final DataFrame was filtered to only contain students with 10 or more years of experience at companies with at least 1000 employees, as their recruiter base is suited to more experienced professionals at enterprise companies.</p></li>
+</ul>
+<div id="eda9c1b2-4e9a-41ac-8da6-d4c98775f986" class="cell" data-executioncancelledat="null" data-executiontime="null" data-lastexecutedat="null" data-lastexecutedbykernel="null" data-lastscheduledrunid="null" data-lastsuccessfullyexecutedcode="null" data-outputsmetadata="{&quot;0&quot;:{&quot;height&quot;:237,&quot;type&quot;:&quot;dataFrame&quot;}}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ds_jobs <span class="op">=</span> pd.read_csv(<span class="st">"customer_train.csv"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># View the dataset</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ds_jobs.head()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ds_jobs.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 19158 entries, 0 to 19157
+Data columns (total 14 columns):
+ #   Column                  Non-Null Count  Dtype  
+---  ------                  --------------  -----  
+ 0   student_id              19158 non-null  int64  
+ 1   city                    19158 non-null  object 
+ 2   city_development_index  19158 non-null  float64
+ 3   gender                  14650 non-null  object 
+ 4   relevant_experience     19158 non-null  object 
+ 5   enrolled_university     18772 non-null  object 
+ 6   education_level         18698 non-null  object 
+ 7   major_discipline        16345 non-null  object 
+ 8   experience              19093 non-null  object 
+ 9   company_size            13220 non-null  object 
+ 10  company_type            13018 non-null  object 
+ 11  last_new_job            18735 non-null  object 
+ 12  training_hours          19158 non-null  int64  
+ 13  job_change              19158 non-null  float64
+dtypes: float64(2), int64(2), object(10)
+memory usage: 2.0+ MB</code></pre>
+</div>
+</div>
+</section>
+<section id="data-analysis-1" class="level2">
+<h2 class="anchored" data-anchor-id="data-analysis-1">Data Analysis</h2>
+<p>Include below are the codes used to achieve the task given</p>
+<div id="b63b48b2-a5d1-4177-8b05-613f5b82d6ff" class="cell" data-executioncancelledat="null" data-executiontime="null" data-lastexecutedat="null" data-lastexecutedbykernel="null" data-lastscheduledrunid="null" data-lastsuccessfullyexecutedcode="null" data-outputsmetadata="{&quot;0&quot;:{&quot;height&quot;:482,&quot;type&quot;:&quot;stream&quot;},&quot;1&quot;:{&quot;height&quot;:237,&quot;type&quot;:&quot;dataFrame&quot;}}" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import necessary libraries</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the dataset and create a copy</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ds_jobs <span class="op">=</span> pd.read_csv(<span class="st">"customer_train.csv"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>ds_jobs_transformed <span class="op">=</span> ds_jobs.copy()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># EDA to help identify ordinal, nominal, and two-factor categories</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> ds_jobs.select_dtypes(<span class="st">"object"</span>).columns:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(ds_jobs_transformed[col].value_counts(), <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dictionary of columns containing ordered categorical data</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ordered_cats <span class="op">=</span> {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'enrolled_university'</span>: [<span class="st">'no_enrollment'</span>, <span class="st">'Part time course'</span>, <span class="st">'Full time course'</span>],</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'education_level'</span>: [<span class="st">'Primary School'</span>, <span class="st">'High School'</span>, <span class="st">'Graduate'</span>, <span class="st">'Masters'</span>, <span class="st">'Phd'</span>],</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'experience'</span>: [<span class="st">'&lt;1'</span>] <span class="op">+</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">21</span>))) <span class="op">+</span> [<span class="st">'&gt;20'</span>],</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'company_size'</span>: [<span class="st">'&lt;10'</span>, <span class="st">'10-49'</span>, <span class="st">'50-99'</span>, <span class="st">'100-499'</span>, <span class="st">'500-999'</span>, <span class="st">'1000-4999'</span>, <span class="st">'5000-9999'</span>, <span class="st">'10000+'</span>],</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'last_new_job'</span>: [<span class="st">'never'</span>, <span class="st">'1'</span>, <span class="st">'2'</span>, <span class="st">'3'</span>, <span class="st">'4'</span>, <span class="st">'&gt;4'</span>]</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a mapping dictionary of columns containing two-factor categories to convert to Booleans</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>two_factor_cats <span class="op">=</span> {</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'relevant_experience'</span>: {<span class="st">'No relevant experience'</span>: <span class="va">False</span>, <span class="st">'Has relevant experience'</span>: <span class="va">True</span>},</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'job_change'</span>: {<span class="fl">0.0</span>: <span class="va">False</span>, <span class="fl">1.0</span>: <span class="va">True</span>}</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through DataFrame columns to efficiently change data types</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> ds_jobs_transformed:</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert two-factor categories to bool</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> col <span class="kw">in</span> [<span class="st">'relevant_experience'</span>, <span class="st">'job_change'</span>]:</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        ds_jobs_transformed[col] <span class="op">=</span> ds_jobs_transformed[col].<span class="bu">map</span>(two_factor_cats[col])</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert integer columns to int32</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> col <span class="kw">in</span> [<span class="st">'student_id'</span>, <span class="st">'training_hours'</span>]:</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        ds_jobs_transformed[col] <span class="op">=</span> ds_jobs_transformed[col].astype(<span class="st">'int32'</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert float columns to float16</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> col <span class="op">==</span> <span class="st">'city_development_index'</span>:</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        ds_jobs_transformed[col] <span class="op">=</span> ds_jobs_transformed[col].astype(<span class="st">'float16'</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert columns containing ordered categorical data to ordered categories using dict</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> col <span class="kw">in</span> ordered_cats.keys():</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        category <span class="op">=</span> pd.CategoricalDtype(ordered_cats[col], ordered<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        ds_jobs_transformed[col] <span class="op">=</span> ds_jobs_transformed[col].astype(category)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert remaining columns to standard categories</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        ds_jobs_transformed[col] <span class="op">=</span> ds_jobs_transformed[col].astype(<span class="st">'category'</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter students with 10 or more years experience at companies with at least 1000 employees</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>ds_jobs_transformed <span class="op">=</span> ds_jobs_transformed[(ds_jobs_transformed[<span class="st">'experience'</span>] <span class="op">&gt;=</span> <span class="st">'10'</span>) <span class="op">&amp;</span> (ds_jobs_transformed[<span class="st">'company_size'</span>] <span class="op">&gt;=</span> <span class="st">'1000-4999'</span>)]</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>ds_jobs_transformed.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>city
+city_103    4355
+city_21     2702
+city_16     1533
+city_114    1336
+city_160     845
+            ... 
+city_129       3
+city_111       3
+city_121       3
+city_140       1
+city_171       1
+Name: count, Length: 123, dtype: int64 
+
+gender
+Male      13221
+Female     1238
+Other       191
+Name: count, dtype: int64 
+
+relevant_experience
+Has relevant experience    13792
+No relevant experience      5366
+Name: count, dtype: int64 
+
+enrolled_university
+no_enrollment       13817
+Full time course     3757
+Part time course     1198
+Name: count, dtype: int64 
+
+education_level
+Graduate          11598
+Masters            4361
+High School        2017
+Phd                 414
+Primary School      308
+Name: count, dtype: int64 
+
+major_discipline
+STEM               14492
+Humanities           669
+Other                381
+Business Degree      327
+Arts                 253
+No Major             223
+Name: count, dtype: int64 
+
+experience
+&gt;20    3286
+5      1430
+4      1403
+3      1354
+6      1216
+2      1127
+7      1028
+10      985
+9       980
+8       802
+15      686
+11      664
+14      586
+1       549
+&lt;1      522
+16      508
+12      494
+13      399
+17      342
+19      304
+18      280
+20      148
+Name: count, dtype: int64 
+
+company_size
+50-99        3083
+100-499      2571
+10000+       2019
+10-49        1471
+1000-4999    1328
+&lt;10          1308
+500-999       877
+5000-9999     563
+Name: count, dtype: int64 
+
+company_type
+Pvt Ltd                9817
+Funded Startup         1001
+Public Sector           955
+Early Stage Startup     603
+NGO                     521
+Other                   121
+Name: count, dtype: int64 
+
+last_new_job
+1        8040
+&gt;4       3290
+2        2900
+never    2452
+4        1029
+3        1024
+Name: count, dtype: int64 
+
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 2201 entries, 9 to 19143
+Data columns (total 14 columns):
+ #   Column                  Non-Null Count  Dtype   
+---  ------                  --------------  -----   
+ 0   student_id              2201 non-null   int32   
+ 1   city                    2201 non-null   category
+ 2   city_development_index  2201 non-null   float16 
+ 3   gender                  1821 non-null   category
+ 4   relevant_experience     2201 non-null   bool    
+ 5   enrolled_university     2185 non-null   category
+ 6   education_level         2184 non-null   category
+ 7   major_discipline        2097 non-null   category
+ 8   experience              2201 non-null   category
+ 9   company_size            2201 non-null   category
+ 10  company_type            2144 non-null   category
+ 11  last_new_job            2184 non-null   category
+ 12  training_hours          2201 non-null   int32   
+ 13  job_change              2201 non-null   bool    
+dtypes: bool(2), category(9), float16(1), int32(2)
+memory usage: 69.5 KB</code></pre>
+</div>
+</div>
+</section>
+<section id="results-1" class="level2">
+<h2 class="anchored" data-anchor-id="results-1">Results</h2>
+<p>There was a marked reduction in the size of the <code>ds_jobs_transformed</code> DataFrame from 2.0+ MB to 69.5 KB, which help to save memory and prepare the data for predictive modelling.</p>
+</section>
+<section id="recommendations-1" class="level2">
+<h2 class="anchored" data-anchor-id="recommendations-1">Recommendations</h2>
+<p>None</p>
+</section>
+<section id="limitations-1" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-1">Limitations</h2>
+<p>None</p>
+</section>
+<section id="references-1" class="level2">
+<h2 class="anchored" data-anchor-id="references-1">References</h2>
+<ol type="1">
+<li><p>Filtering DataFrames in Intermediate Python Course for Associate Data Scientist in Python Carrer Track in DataCamp Inc by Hugo Bowne-Henderson.</p></li>
+<li><p>For loop in Intermediate Python Course for Associate Data Scientist in Python Carrer Track in DataCamp Inc by Hugo Bowne-Henderson.</p></li>
+<li><p>Python For Data Analysis 3E (Online) by Wes Mckinney Click <a href="https://wesmckinney.com/book/">here</a> to preview</p></li>
+<li><p>Working with Categorical Data in Python in Intermediate Python Course for Associate Data Scientist in Python Carrer Track in DataCamp Inc by Kasey Jones.</p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
